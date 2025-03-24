@@ -104,10 +104,12 @@ export default ScaledSheet.create({
   listChildLabel: {},
   listItemContainer: {
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: Colors.SHUTTLE_GREY,
     flexDirection: 'row',
-    height: moderateScale(40),
+    height: moderateScale(50),
     justifyContent: 'space-between',
-    paddingHorizontal: moderateScale(10),
+    paddingHorizontal: moderateScale(10)
   },
   listItemLabel: {
     color: Colors.BLACK,
