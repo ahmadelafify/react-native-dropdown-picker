@@ -9,21 +9,22 @@ const PickerLabel = ({
   labelContainerStyle,
   transformY = 0,
   indentWidth = 0,
+  allowFontScaling = false,
 }) => {
   return (
     <View
       style={[
         styles.container,
         {
-          transform: [
-            { translateY: transformY * -1 },
-            { translateX: indentWidth },
-          ],
+          transform: [{ translateY: transformY * -1 }, { translateX: indentWidth }],
         },
         labelContainerStyle,
       ]}
-      onLayout={onLayout}>
-      <Text style={[styles.label, labelTextStyle]}>{label}</Text>
+      onLayout={onLayout}
+    >
+      <Text style={[styles.label, labelTextStyle]} allowFontScaling={allowFontScaling}>
+        {label}
+      </Text>
     </View>
   );
 };

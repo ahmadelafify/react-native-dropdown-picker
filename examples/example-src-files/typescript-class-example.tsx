@@ -47,17 +47,13 @@ export default class TypescriptClassExample extends Component<Props, State> {
     }));
   }
 
-  setMultiValue(
-    callback: (prevState: Array<string> | null) => Array<string> | null,
-  ): void {
+  setMultiValue(callback: (prevState: Array<string> | null) => Array<string> | null): void {
     this.setState((state: Readonly<State>) => ({
       multiValue: callback(state.multiValue),
     }));
   }
 
-  setItems(
-    callback: (prevState: Array<ItemType<string>>) => Array<ItemType<string>>,
-  ): void {
+  setItems(callback: (prevState: Array<ItemType<string>>) => Array<ItemType<string>>): void {
     this.setState((state: Readonly<State>) => ({
       items: callback(state.items),
     }));
@@ -71,8 +67,7 @@ export default class TypescriptClassExample extends Component<Props, State> {
       <View style={{ flex: 3 }}>
         <View style={{ flex: 1 }}>
           <Text>
-            Choose a name (typescript class,{' '}
-            {multiple ? 'multiple-item' : 'single-item'}):
+            Choose a name (typescript class, {multiple ? 'multiple-item' : 'single-item'}):
           </Text>
         </View>
 
@@ -85,9 +80,9 @@ export default class TypescriptClassExample extends Component<Props, State> {
               setOpen={this.setOpen}
               setValue={this.setMultiValue}
               setItems={this.setItems}
-              placeholder='Choose a name'
+              placeholder="Choose a name"
               multiple
-              multipleText='You have chosen {count} names.'
+              multipleText="You have chosen {count} names."
             />
           ) : (
             <DropDownPicker
@@ -97,7 +92,7 @@ export default class TypescriptClassExample extends Component<Props, State> {
               setOpen={this.setOpen}
               setValue={this.setSingleValue}
               setItems={this.setItems}
-              placeholder='Choose a name'
+              placeholder="Choose a name"
               multiple={false}
             />
           )}
@@ -107,9 +102,7 @@ export default class TypescriptClassExample extends Component<Props, State> {
           <View style={{ flex: 1 }}>
             <Text>
               {multiple ? 'Names currently are: ' : 'Name currently is: '}
-              {multiple
-                ? JSON.stringify(multiValue)
-                : JSON.stringify(singleValue)}
+              {multiple ? JSON.stringify(multiValue) : JSON.stringify(singleValue)}
             </Text>
           </View>
 

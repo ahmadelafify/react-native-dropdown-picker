@@ -8,13 +8,16 @@ function ListEmpty({
   ActivityIndicatorComponent,
   listMessageContainerStyle,
   listMessageTextStyle,
+  allowFontScaling = false,
 }) {
   return (
     <View style={listMessageContainerStyle}>
       {loading ? (
         <ActivityIndicatorComponent />
       ) : (
-        <Text style={listMessageTextStyle}>{message}</Text>
+        <Text style={listMessageTextStyle} allowFontScaling={allowFontScaling}>
+          {message}
+        </Text>
       )}
     </View>
   );

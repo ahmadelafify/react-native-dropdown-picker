@@ -33,19 +33,19 @@ export default class JavascriptClassExample extends Component {
   }
 
   setSingleValue(callback) {
-    this.setState((state) => ({
+    this.setState(state => ({
       singleValue: callback(state.singleValue),
     }));
   }
 
   setMultiValue(callback) {
-    this.setState((state) => ({
+    this.setState(state => ({
       multiValue: callback(state.multiValue),
     }));
   }
 
   setItems(callback) {
-    this.setState((state) => ({
+    this.setState(state => ({
       items: callback(state.items),
     }));
   }
@@ -58,8 +58,7 @@ export default class JavascriptClassExample extends Component {
       <View style={{ flex: 3 }}>
         <View style={{ flex: 1 }}>
           <Text>
-            Choose a name (javascript class,{' '}
-            {multiple ? 'multiple-item' : 'single-item'}):
+            Choose a name (javascript class, {multiple ? 'multiple-item' : 'single-item'}):
           </Text>
         </View>
 
@@ -72,9 +71,9 @@ export default class JavascriptClassExample extends Component {
               setOpen={this.setOpen}
               setValue={this.setMultiValue}
               setItems={this.setItems}
-              placeholder='Choose a name'
+              placeholder="Choose a name"
               multiple
-              multipleText='You have chosen {count} names.'
+              multipleText="You have chosen {count} names."
             />
           ) : (
             <DropDownPicker
@@ -84,7 +83,7 @@ export default class JavascriptClassExample extends Component {
               setOpen={this.setOpen}
               setValue={this.setSingleValue}
               setItems={this.setItems}
-              placeholder='Choose a name'
+              placeholder="Choose a name"
               multiple={false}
             />
           )}
@@ -94,9 +93,7 @@ export default class JavascriptClassExample extends Component {
           <View style={{ flex: 1 }}>
             <Text>
               {multiple ? 'Names currently are: ' : 'Name currently is: '}
-              {multiple
-                ? JSON.stringify(multiValue)
-                : JSON.stringify(singleValue)}
+              {multiple ? JSON.stringify(multiValue) : JSON.stringify(singleValue)}
             </Text>
           </View>
 

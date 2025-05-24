@@ -18,6 +18,7 @@ function RenderBadge({
   showBadgeDot,
   onPress,
   THEME,
+  allowFontScaling = false,
 }) {
   /**
    * onPress.
@@ -66,7 +67,9 @@ function RenderBadge({
   return (
     <TouchableOpacity style={_badgeStyle} {...props} onPress={__onPress}>
       {showBadgeDot && <View style={_badgeDotStyle} />}
-      <Text style={_badgeTextStyle}>{label}</Text>
+      <Text style={_badgeTextStyle} allowFontScaling={allowFontScaling}>
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 }

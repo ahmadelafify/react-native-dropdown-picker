@@ -118,9 +118,7 @@ export default class App extends React.Component<Props, State> {
     this.setState({ examplePickerOpen });
   }
 
-  setCurrentExample(
-    callback: (prevState: ExampleComponent | null) => ExampleComponent,
-  ): void {
+  setCurrentExample(callback: (prevState: ExampleComponent | null) => ExampleComponent): void {
     this.setState((state: Readonly<State>) => ({
       currentExample: callback(state.currentExample),
     }));

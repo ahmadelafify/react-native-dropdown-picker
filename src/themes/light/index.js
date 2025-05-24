@@ -1,9 +1,4 @@
-import {
-  ScaledSheet,
-  moderateScale,
-  verticalScale,
-  scale,
-} from 'react-native-size-matters';
+import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import Colors from '../../constants/colors';
 
 export const ICONS = {
@@ -109,7 +104,7 @@ export default ScaledSheet.create({
     flexDirection: 'row',
     height: moderateScale(50),
     justifyContent: 'space-between',
-    paddingHorizontal: moderateScale(10)
+    paddingHorizontal: moderateScale(10),
   },
   listItemLabel: {
     color: Colors.BLACK,

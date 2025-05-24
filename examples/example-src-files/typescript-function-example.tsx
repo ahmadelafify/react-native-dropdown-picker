@@ -7,9 +7,7 @@ import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
  * @param props
  * @param props.multiple
  */
-export default function TypescriptFunctionExample(props: {
-  multiple: boolean;
-}): JSX.Element {
+export default function TypescriptFunctionExample(props: { multiple: boolean }): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   const [singleValue, setSingleValue] = useState<string | null>(null);
   const [multiValue, setMultiValue] = useState<Array<string> | null>(null);
@@ -27,8 +25,7 @@ export default function TypescriptFunctionExample(props: {
     <View style={{ flex: 3 }}>
       <View style={{ flex: 1 }}>
         <Text>
-          Choose a fruit (typescript function,{' '}
-          {multiple ? 'multiple-item' : 'single-item'}):
+          Choose a fruit (typescript function, {multiple ? 'multiple-item' : 'single-item'}):
         </Text>
       </View>
 
@@ -41,9 +38,9 @@ export default function TypescriptFunctionExample(props: {
             setOpen={setOpen}
             setValue={setMultiValue}
             setItems={setItems}
-            placeholder='Choose a fruit'
+            placeholder="Choose a fruit"
             multiple
-            multipleText='You have chosen {count} fruits.'
+            multipleText="You have chosen {count} fruits."
           />
         ) : (
           <DropDownPicker
@@ -53,7 +50,7 @@ export default function TypescriptFunctionExample(props: {
             setOpen={setOpen}
             setValue={setSingleValue}
             setItems={setItems}
-            placeholder='Choose a fruit'
+            placeholder="Choose a fruit"
             multiple={false}
           />
         )}
@@ -63,9 +60,7 @@ export default function TypescriptFunctionExample(props: {
         <View style={{ flex: 1 }}>
           <Text>
             {multiple ? 'Fruits currently are: ' : 'Fruit currently is: '}
-            {multiple
-              ? JSON.stringify(multiValue)
-              : JSON.stringify(singleValue)}
+            {multiple ? JSON.stringify(multiValue) : JSON.stringify(singleValue)}
           </Text>
         </View>
 

@@ -34,6 +34,7 @@ function RenderListItem({
   onPress,
   setPosition,
   THEME,
+  allowFontScaling = false,
 }) {
   /**
    * The tick icon component.
@@ -79,11 +80,7 @@ function RenderListItem({
    * @returns {JSX}
    */
   const _customItemContainerStyle = useMemo(
-    () =>
-      custom && [
-        THEME.customItemContainer,
-        ...[customItemContainerStyle].flat(),
-      ],
+    () => custom && [THEME.customItemContainer, ...[customItemContainerStyle].flat()],
     [THEME, custom, customItemContainerStyle],
   );
 
@@ -204,9 +201,10 @@ function RenderListItem({
       onLayout={onLayout}
       {...props}
       disabled={selectable === false || disabled}
-      testID={item.testID}>
+      testID={item.testID}
+    >
       {IconComponent}
-      <Text style={_listItemLabelStyle} {...labelProps}>
+      <Text style={_listItemLabelStyle} allowFontScaling={allowFontScaling} {...labelProps}>
         {label}
       </Text>
       {_TickIconComponent}
@@ -222,8 +220,7 @@ const areEqual = (nextProps, prevProps) => {
   if (nextProps.disabled !== prevProps.disabled) return false;
   if (nextProps.custom !== prevProps.custom) return false;
   if (nextProps.isSelected !== prevProps.isSelected) return false;
-  if (nextProps.categorySelectable !== prevProps.categorySelectable)
-    return false;
+  if (nextProps.categorySelectable !== prevProps.categorySelectable) return false;
   if (nextProps.rtl !== prevProps.rtl) return false;
   if (nextProps.theme !== prevProps.theme) return false;
 

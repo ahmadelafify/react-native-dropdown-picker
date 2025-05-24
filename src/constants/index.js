@@ -51,7 +51,7 @@ export const LANGUAGE = {
   ITALIAN: 'IT',
 };
 
-export const GET_DROPDOWN_DIRECTION = (direction) => {
+export const GET_DROPDOWN_DIRECTION = direction => {
   switch (direction) {
     case DROPDOWN_DIRECTION.AUTO:
       return 'top';
@@ -80,8 +80,7 @@ export const RTL_DIRECTION = (rtl, style) => {
 
   if (rtl && !I18nManager.isRTL) {
     if (newStyle.hasOwnProperty('flexDirection')) {
-      newStyle.flexDirection =
-        newStyle.flexDirection === 'row' ? 'row-reverse' : 'row';
+      newStyle.flexDirection = newStyle.flexDirection === 'row' ? 'row-reverse' : 'row';
     } else {
       newStyle.flexDirection = 'row-reverse';
     }
@@ -94,7 +93,7 @@ export const RTL_STYLE = (rtl, style) => {
   const newStyle = { ...style };
 
   if (rtl && !I18nManager.isRTL) {
-    Object.keys(style).map((key) => {
+    Object.keys(style).map(key => {
       if (STYLE_DIRECTION_KEYS.hasOwnProperty(key)) {
         newStyle[STYLE_DIRECTION_KEYS[key]] = newStyle[key];
         delete newStyle[key];
@@ -107,11 +106,7 @@ export const RTL_STYLE = (rtl, style) => {
   return newStyle;
 };
 
-export const GET_TRANSLATION = (
-  key,
-  language = LANGUAGE.DEFAULT,
-  customTranslation = {},
-) => {
+export const GET_TRANSLATION = (key, language = LANGUAGE.DEFAULT, customTranslation = {}) => {
   try {
     const data = { ...TRANSLATIONS[language], ...customTranslation }[key];
 
@@ -127,7 +122,7 @@ export const BADGE_COLORS = [Colors.ALTO];
 
 export const BADGE_DOT_COLORS = [Colors.GREY];
 
-export const ASCII_CODE = (str) => {
+export const ASCII_CODE = str => {
   let chr = 0;
 
   if (str.length === 0) return chr;

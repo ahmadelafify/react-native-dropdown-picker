@@ -25,8 +25,7 @@ export default function JavascriptFunctionExample(props) {
     <View style={{ flex: 3 }}>
       <View style={{ flex: 1 }}>
         <Text>
-          Choose a fruit (javascript function,{' '}
-          {multiple ? 'multiple-item' : 'single-item'}):
+          Choose a fruit (javascript function, {multiple ? 'multiple-item' : 'single-item'}):
         </Text>
       </View>
 
@@ -39,9 +38,9 @@ export default function JavascriptFunctionExample(props) {
             setOpen={setOpen}
             setValue={setMultiValue}
             setItems={setItems}
-            placeholder='Choose a fruit'
+            placeholder="Choose a fruit"
             multiple
-            multipleText='You have chosen {count} fruits.'
+            multipleText="You have chosen {count} fruits."
           />
         ) : (
           <DropDownPicker
@@ -51,7 +50,7 @@ export default function JavascriptFunctionExample(props) {
             setOpen={setOpen}
             setValue={setSingleValue}
             setItems={setItems}
-            placeholder='Choose a fruit'
+            placeholder="Choose a fruit"
             multiple={false}
           />
         )}
@@ -61,9 +60,7 @@ export default function JavascriptFunctionExample(props) {
         <View style={{ flex: 1 }}>
           <Text>
             {multiple ? 'Fruits currently are: ' : 'Fruit currently is: '}
-            {multiple
-              ? JSON.stringify(multiValue)
-              : JSON.stringify(singleValue)}
+            {multiple ? JSON.stringify(multiValue) : JSON.stringify(singleValue)}
           </Text>
         </View>
 
