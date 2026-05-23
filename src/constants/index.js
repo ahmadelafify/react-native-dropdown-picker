@@ -1,10 +1,5 @@
 import { I18nManager } from 'react-native';
 
-import TRANSLATIONS from '../translations';
-import Colors from './colors';
-
-export { TRANSLATIONS };
-
 export const SCHEMA = {
   label: 'label',
   value: 'value',
@@ -15,12 +10,6 @@ export const SCHEMA = {
   testID: 'testID',
   containerStyle: 'containerStyle',
   labelStyle: 'labelStyle',
-};
-
-export const MODE = {
-  DEFAULT: 'SIMPLE',
-  SIMPLE: 'SIMPLE',
-  BADGE: 'BADGE',
 };
 
 export const LIST_MODE = {
@@ -35,20 +24,6 @@ export const DROPDOWN_DIRECTION = {
   TOP: 'TOP',
   BOTTOM: 'BOTTOM',
   AUTO: 'AUTO',
-};
-
-export const LANGUAGE = {
-  DEFAULT: 'EN',
-  FALLBACK: 'EN',
-
-  ENGLISH: 'EN',
-  ARABIC: 'AR',
-  FARSI: 'FA',
-  TURKISH: 'TR',
-  RUSSIAN: 'RU',
-  SPANISH: 'ES',
-  INDONESIAN: 'ID',
-  ITALIAN: 'IT',
 };
 
 export const GET_DROPDOWN_DIRECTION = direction => {
@@ -79,7 +54,7 @@ export const RTL_DIRECTION = (rtl, style) => {
   const newStyle = { ...style };
 
   if (rtl && !I18nManager.isRTL) {
-    if (newStyle.hasOwnProperty('flexDirection')) {
+    if (Object.prototype.hasOwnProperty.call(newStyle, 'flexDirection')) {
       newStyle.flexDirection = newStyle.flexDirection === 'row' ? 'row-reverse' : 'row';
     } else {
       newStyle.flexDirection = 'row-reverse';
@@ -93,34 +68,16 @@ export const RTL_STYLE = (rtl, style) => {
   const newStyle = { ...style };
 
   if (rtl && !I18nManager.isRTL) {
-    Object.keys(style).map(key => {
-      if (STYLE_DIRECTION_KEYS.hasOwnProperty(key)) {
+    for (const key of Object.keys(style)) {
+      if (Object.prototype.hasOwnProperty.call(STYLE_DIRECTION_KEYS, key)) {
         newStyle[STYLE_DIRECTION_KEYS[key]] = newStyle[key];
         delete newStyle[key];
-      } else {
-        newStyle[key] = newStyle[key];
       }
-    });
+    }
   }
 
   return newStyle;
 };
-
-export const GET_TRANSLATION = (key, language = LANGUAGE.DEFAULT, customTranslation = {}) => {
-  try {
-    const data = { ...TRANSLATIONS[language], ...customTranslation }[key];
-
-    if (typeof data === 'undefined') throw Error();
-
-    return data;
-  } catch (e) {
-    return { ...TRANSLATIONS[LANGUAGE.FALLBACK], ...customTranslation }[key];
-  }
-};
-
-export const BADGE_COLORS = [Colors.ALTO];
-
-export const BADGE_DOT_COLORS = [Colors.GREY];
 
 export const ASCII_CODE = str => {
   let chr = 0;

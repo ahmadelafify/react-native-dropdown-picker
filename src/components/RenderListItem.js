@@ -222,7 +222,6 @@ const areEqual = (nextProps, prevProps) => {
   if (nextProps.isSelected !== prevProps.isSelected) return false;
   if (nextProps.categorySelectable !== prevProps.categorySelectable) return false;
   if (nextProps.rtl !== prevProps.rtl) return false;
-  if (nextProps.theme !== prevProps.theme) return false;
 
   return true;
 };

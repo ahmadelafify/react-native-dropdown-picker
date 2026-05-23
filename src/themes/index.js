@@ -1,5 +1,1 @@
-export default {
-  DEFAULT: 'LIGHT',
-  LIGHT: require('./light'),
-  DARK: require('./dark'),
-};
+export { default, ICONS } from './light';

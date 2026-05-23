@@ -1,179 +1,70 @@
-import React, { JSX } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { JSX, useCallback, useState } from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import { ItemType } from 'react-native-dropdown-picker';
 import { moderateScale } from 'react-native-size-matters';
-import JavascriptClassExample from './example-src-files/javascript-class-example';
-import JavascriptFunctionExample from './example-src-files/javascript-function-example';
-import TypescriptClassExample from './example-src-files/typescript-class-example';
 import TypescriptFunctionExample from './example-src-files/typescript-function-example';
-import Picker from './src/components/Picker';
+import OldPicker from './src/components/Picker';
+import NewPicker from '../src/components/Picker';
 
-enum ExampleComponent {
-  JavaScriptClassSingleValue,
-  JavaScriptClassMultiValue,
-  JavaScriptFunctionSingleValue,
-  JavaScriptFunctionMultiValue,
-  TypeScriptClassSingleValue,
-  TypeScriptClassMultiValue,
-  TypeScriptFunctionSingleValue,
-  TypeScriptFunctionMultiValue,
-}
+type ExampleKind = 'single' | 'multi';
+
+const EXAMPLE_ITEMS: Array<ItemType<ExampleKind>> = [
+  { label: 'Single-select', value: 'single' },
+  { label: 'Multi-select', value: 'multi' },
+];
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
-    flexDirection: 'column',
     margin: 3,
     marginTop: 20,
     padding: 3,
   },
+  leftSquare: {
+    height: moderateScale(24),
+    width: moderateScale(24),
+    backgroundColor: 'red',
+  },
 });
 
-const EXAMPLE_COMPONENT_ITEMS: Array<ItemType<ExampleComponent>> = [
-  {
-    label: 'JavaScript; class component; single-item',
-    value: ExampleComponent.JavaScriptClassSingleValue,
-  },
-  {
-    label: 'JavaScript; class component; multiple-item',
-    value: ExampleComponent.JavaScriptClassMultiValue,
-  },
-  {
-    label: 'JavaScript; function component; single-item',
-    value: ExampleComponent.JavaScriptFunctionSingleValue,
-  },
-  {
-    label: 'JavaScript; function component; multiple-item',
-    value: ExampleComponent.JavaScriptFunctionMultiValue,
-  },
-  {
-    label: 'TypeScript; class component; single-item',
-    value: ExampleComponent.TypeScriptClassSingleValue,
-  },
-  {
-    label: 'TypeScript; class component; multiple-item',
-    value: ExampleComponent.TypeScriptClassMultiValue,
-  },
-  {
-    label: 'TypeScript; function component; single-item',
-    value: ExampleComponent.TypeScriptFunctionSingleValue,
-  },
-  {
-    label: 'TypeScript; function component; multiple-item',
-    value: ExampleComponent.TypeScriptFunctionMultiValue,
-  },
-];
+export default function App(): JSX.Element {
+  const [example, setExample] = useState<ExampleKind>('single');
+  const [pickerOpen, setPickerOpen] = useState<boolean>(false);
+  const [useNewPicker, setUseNewPicker] = useState<boolean>(false);
 
-type Props = Record<string, never>;
+  const toggleNewPicker = useCallback(() => setUseNewPicker((v) => !v), []);
 
-interface State {
-  currentExample: ExampleComponent;
-  examplePickerOpen: boolean;
-  exampleComponents: Array<ItemType<ExampleComponent>>;
-}
+  const Picker = useNewPicker ? NewPicker : OldPicker;
 
-export default class App extends React.Component<Props, State> {
-  constructor(props: Readonly<Props>) {
-    super(props);
-    this.state = {
-      currentExample: ExampleComponent.JavaScriptClassSingleValue,
-      exampleComponents: EXAMPLE_COMPONENT_ITEMS,
-      examplePickerOpen: false,
-    };
-
-    this.setOpen = this.setOpen.bind(this);
-    this.setCurrentExample = this.setCurrentExample.bind(this);
-  }
-
-  private static getExample(egComponent: ExampleComponent): JSX.Element {
-    switch (egComponent) {
-      case ExampleComponent.JavaScriptClassSingleValue:
-        return <JavascriptClassExample multiple={false} />;
-      case ExampleComponent.JavaScriptClassMultiValue:
-        return <JavascriptClassExample multiple />;
-      case ExampleComponent.JavaScriptFunctionSingleValue:
-        return <JavascriptFunctionExample multiple={false} />;
-      case ExampleComponent.JavaScriptFunctionMultiValue:
-        return <JavascriptFunctionExample multiple />;
-      case ExampleComponent.TypeScriptClassSingleValue:
-        return <TypescriptClassExample multiple={false} />;
-      case ExampleComponent.TypeScriptClassMultiValue:
-        return <TypescriptClassExample multiple />;
-      case ExampleComponent.TypeScriptFunctionSingleValue:
-        return <TypescriptFunctionExample multiple={false} />;
-      case ExampleComponent.TypeScriptFunctionMultiValue:
-        return <TypescriptFunctionExample multiple />;
-      default:
-        throw new Error(
-          "couldn't match example component in getExample() in App.tsx. egComponent was: ",
-          egComponent,
-        );
-    }
-  }
-
-  setOpen(examplePickerOpen: boolean): void {
-    this.setState({ examplePickerOpen });
-  }
-
-  setCurrentExample(callback: (prevState: ExampleComponent | null) => ExampleComponent): void {
-    this.setState((state: Readonly<State>) => ({
-      currentExample: callback(state.currentExample),
-    }));
-  }
-
-  // todo: fix picker items being under text
-
-  render(): JSX.Element {
-    const { currentExample, examplePickerOpen, exampleComponents } = this.state;
-
-    return (
-      <View style={styles.container}>
-        <View style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
-            <Text>Choose example:</Text>
-          </View>
-
-          <View style={{ flex: 1 }}>
-            <Picker
-              testID={'hello'}
-              closeIconTestID={'closeHello'}
-              modalTitle={'test'}
-              label={'This Is A Testing Label'}
-              listMode={'MODAL'}
-              searchable={true}
-              setValue={this.setCurrentExample}
-              value={currentExample as any}
-              items={exampleComponents}
-              open={examplePickerOpen}
-              setOpen={this.setOpen as any}
-              mode={'SIMPLE'}
-              hideListItemsIcons={true}
-              leftComponent={
-                (
-                  <View
-                    style={{
-                      height: moderateScale(24),
-                      width: moderateScale(24),
-                      backgroundColor: 'red',
-                    }}
-                  />
-                ) as any
-              }
-            />
-          </View>
-        </View>
-
-        <View style={{ flex: 3 }}>
-          <View style={{ flex: 1 }}>
-            <Text>Example:</Text>
-          </View>
-
-          {App.getExample(currentExample)}
-        </View>
+  return (
+    <View style={styles.container}>
+      <View style={{ flex: 1 }}>
+        <Text>Choose example:</Text>
+        <Button
+          title={useNewPicker ? 'NEW (v6 src/) — tap for OLD' : 'OLD (examples/src/) — tap for NEW'}
+          onPress={toggleNewPicker}
+        />
+        <Picker
+          testID="hello"
+          closeIconTestID="closeHello"
+          modalTitle="test"
+          label="This Is A Testing Label"
+          listMode="MODAL"
+          searchable
+          setValue={setExample}
+          value={example as any}
+          items={EXAMPLE_ITEMS}
+          open={pickerOpen}
+          setOpen={setPickerOpen as any}
+          hideListItemsIcons
+          leftComponent={(<View style={styles.leftSquare} />) as any}
+        />
       </View>
-    );
-  }
+
+      <View style={{ flex: 3 }}>
+        <Text>Example:</Text>
+        <TypescriptFunctionExample multiple={example === 'multi'} />
+      </View>
+    </View>
+  );
 }

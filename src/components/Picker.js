@@ -29,24 +29,17 @@ import { moderateScale } from 'react-native-size-matters';
 
 import {
   ASCII_CODE,
-  BADGE_COLORS,
-  BADGE_DOT_COLORS,
   DROPDOWN_DIRECTION,
   GET_DROPDOWN_DIRECTION,
-  GET_TRANSLATION,
-  LANGUAGE,
   LIST_MODE,
-  MODE,
   RTL_DIRECTION,
   RTL_STYLE,
   SCHEMA,
-  TRANSLATIONS,
 } from '../constants';
 
 import Colors from '../constants/colors';
-import THEMES from '../themes';
+import THEME, { ICONS as ICON } from '../themes';
 import ListEmpty from './ListEmpty';
-import RenderBadgeItem from './RenderBadgeItem';
 import RenderListItem from './RenderListItem';
 import PickerLabel from './PickerLabel';
 
@@ -71,13 +64,6 @@ function Picker({
   arrowIconStyle = {},
   ArrowUpIconComponent = null,
   autoScroll = false,
-  badgeColors = BADGE_COLORS,
-  badgeDotColors = BADGE_DOT_COLORS,
-  badgeDotStyle = {},
-  badgeProps = {},
-  badgeSeparatorStyle = {},
-  badgeStyle = {},
-  badgeTextStyle = {},
   bottomOffset = 0,
   categorySelectable = true,
   closeAfterSelecting = true,
@@ -101,7 +87,6 @@ function Picker({
   dropDownLabelContainerStyle = {},
   dropDownLabelTextStyle = {},
   dropDownLabelY = 0,
-  extendableBadgeContainer = false,
   flatListProps = {},
   hidden = false,
   hideSelectedItemIcon = false,
@@ -114,7 +99,6 @@ function Picker({
   itemSeparatorStyle = {},
   label = '',
   labelProps = {},
-  language = LANGUAGE.DEFAULT,
   leftComponent = undefined,
   leftComponentIndentLabel = true,
   listChildContainerStyle = {},
@@ -137,7 +121,6 @@ function Picker({
   modalTitle,
   modalTitleStyle = {},
   modalTitleContainerStyle = {},
-  mode = MODE.DEFAULT,
   multiple = false,
   multipleText = null,
   onChangeSearchText = text => {},
@@ -151,7 +134,6 @@ function Picker({
   placeholder = null,
   placeholderStyle = {},
   props = {},
-  renderBadgeItem = null,
   renderListItem = null,
   rtl = false,
   schema = {},
@@ -166,17 +148,14 @@ function Picker({
   selectedItemContainerStyle = {},
   selectedItemLabelStyle = {},
   showArrowIcon = true,
-  showBadgeDot = true,
   showTickIcon = true,
   stickyHeader = false,
   style = {},
   testID,
   textStyle = {},
-  theme = THEMES.DEFAULT,
   TickIconComponent = null,
   tickIconContainerStyle = {},
   tickIconStyle = {},
-  translation = {},
   zIndex = 5000,
   zIndexInverse = 6000,
 }) {
@@ -185,7 +164,6 @@ function Picker({
   const [pickerHeight, setPickerHeight] = useState(0);
   const [direction, setDirection] = useState(GET_DROPDOWN_DIRECTION(dropDownDirection));
 
-  const badgeFlatListRef = useRef();
   const pickerRef = useRef(null);
   const initializationRef = useRef(false);
   const itemPositionsRef = useRef({});
@@ -195,9 +173,6 @@ function Picker({
     items: [],
     value: null,
   });
-
-  const THEME = useMemo(() => THEMES[theme].default, [theme]);
-  const ICON = useMemo(() => THEMES[theme].ICONS, [theme]);
 
   /**
    * The item schema.
@@ -336,13 +311,6 @@ function Picker({
   useEffect(() => {
     setDirection(GET_DROPDOWN_DIRECTION(dropDownDirection));
   }, [dropDownDirection]);
-
-  /**
-   * mode changed.
-   */
-  useEffect(() => {
-    if (mode === MODE.SIMPLE) badgeFlatListRef.current = null;
-  }, [mode]);
 
   /**
    * onPressClose.
@@ -563,49 +531,23 @@ function Picker({
   }, [necessaryItems, _value, multiple, ITEM_SCHEMA.value]);
 
   /**
-   * The language.
-   * @returns {string}
-   */
-  const _language = useMemo(() => {
-    if (TRANSLATIONS.hasOwnProperty(language)) return language;
-
-    return LANGUAGE.FALLBACK;
-  }, [language]);
-
-  /**
-   * Get translation.
-   */
-  const _ = useCallback(
-    key => GET_TRANSLATION(key, _language, translation),
-    [_language, translation],
-  );
-
-  /**
    * The placeholder.
    * @returns {string}
    */
-  const _placeholder = useMemo(() => placeholder ?? _('PLACEHOLDER'), [placeholder, _]);
+  const _placeholder = useMemo(() => placeholder ?? 'Select an item', [placeholder]);
 
   /**
    * The multiple text.
-   * @returns {string}
+   * @returns {string | { 1: string; n: string }}
    */
   const _multipleText = useMemo(
-    () => multipleText ?? _('SELECTED_ITEMS_COUNT_TEXT'),
-    [multipleText, _],
+    () =>
+      multipleText ?? {
+        1: 'An item has been selected',
+        n: '{count} items have been selected',
+      },
+    [multipleText],
   );
-
-  /**
-   * The mode.
-   * @returns {string}
-   */
-  const _mode = useMemo(() => {
-    try {
-      return mode;
-    } catch (e) {
-      return MODE.SIMPLE;
-    }
-  }, [mode]);
 
   /**
    * Indicates whether the value is null.
@@ -974,123 +916,7 @@ function Picker({
   );
 
   /**
-   * onPress badge.
-   */
-  const onPressBadge = useCallback(
-    badgeValue => {
-      setValue(state => {
-        const newState = [...state];
-        newState.filter(nsItem => nsItem !== badgeValue);
-        return newState;
-      });
-    },
-    [setValue],
-  );
-
-  /**
-   * The badge colors.
-   * @returns {object}
-   */
-  const _badgeColors = useMemo(() => {
-    if (typeof badgeColors === 'string') return [badgeColors];
-
-    return badgeColors;
-  }, [badgeColors]);
-
-  /**
-   * The badge dot colors.
-   * @returns {object}
-   */
-  const _badgeDotColors = useMemo(() => {
-    if (typeof badgeDotColors === 'string') return [badgeDotColors];
-
-    return badgeDotColors;
-  }, [badgeDotColors]);
-
-  /**
-   * Get badge color.
-   * @param {string} str
-   * @returns {string}
-   */
-  const getBadgeColor = useCallback(
-    str => {
-      str = `${str}`;
-
-      const index = Math.abs(ASCII_CODE(str)) % _badgeColors.length;
-      return _badgeColors[index];
-    },
-    [_badgeColors],
-  );
-
-  /**
-   * Get badge dot color.
-   * @param {string} str
-   * @returns {string}
-   */
-  const getBadgeDotColor = useCallback(
-    str => {
-      str = `${str}`;
-
-      const index = Math.abs(ASCII_CODE(str)) % _badgeDotColors.length;
-      return _badgeDotColors[index];
-    },
-    [_badgeDotColors],
-  );
-
-  /**
-   * The render badge component.
-   * @returns {JSX.Element}
-   */
-  const RenderBadgeComponent = useMemo(
-    () => (renderBadgeItem !== null ? renderBadgeItem : RenderBadgeItem),
-    [renderBadgeItem],
-  );
-
-  /**
-   * Render badge.
-   * @returns {JSX.Element}
-   */
-  const __renderBadge = useCallback(
-    ({ item }) => (
-      <RenderBadgeComponent
-        props={badgeProps}
-        rtl={rtl}
-        label={item[ITEM_SCHEMA.label]}
-        value={item[ITEM_SCHEMA.value]}
-        IconComponent={item[ITEM_SCHEMA.icon] ?? null}
-        textStyle={textStyle}
-        badgeStyle={badgeStyle}
-        badgeTextStyle={badgeTextStyle}
-        badgeDotStyle={badgeDotStyle}
-        getBadgeColor={getBadgeColor}
-        getBadgeDotColor={getBadgeDotColor}
-        showBadgeDot={showBadgeDot}
-        onPress={onPressBadge}
-        theme={theme}
-        THEME={THEME}
-      />
-    ),
-    [
-      badgeDotStyle,
-      badgeStyle,
-      badgeTextStyle,
-      getBadgeColor,
-      getBadgeDotColor,
-      onPressBadge,
-      rtl,
-      showBadgeDot,
-      textStyle,
-      THEME,
-      theme,
-      badgeProps,
-      ITEM_SCHEMA.label,
-      ITEM_SCHEMA.value,
-      ITEM_SCHEMA.icon,
-    ],
-  );
-
-  /**
-   * The badge key.
+   * The item key.
    * @returns {string}
    */
   const _itemKey = useMemo(() => {
@@ -1106,24 +932,6 @@ function Picker({
   const keyExtractor = useCallback(item => `${item[_itemKey]}`, [_itemKey]);
 
   /**
-   * The badge separator style.
-   * @returns {object}
-   */
-  const _badgeSeparatorStyle = useMemo(
-    () => [THEME.badgeSeparator, ...[badgeSeparatorStyle].flat()],
-    [badgeSeparatorStyle, THEME.badgeSeparator],
-  );
-
-  /**
-   * The badge separator component.
-   * @returns {JSX.Element}
-   */
-  const BadgeSeparatorComponent = useCallback(
-    () => <View style={_badgeSeparatorStyle} />,
-    [_badgeSeparatorStyle],
-  );
-
-  /**
    * The label container style.
    * @returns {object}
    */
@@ -1137,110 +945,6 @@ function Picker({
     [rtl, THEME.labelContainer],
   );
 
-  /**
-   * Badge list empty component.
-   * @returns {JSX.Element}
-   */
-  const BadgeListEmptyComponent = useCallback(
-    () => (
-      <View style={labelContainerStyle}>
-        <Text style={_displayValueStyle} allowFontScaling={allowFontScaling} {...labelProps}>
-          {_placeholder}
-        </Text>
-      </View>
-    ),
-    [_displayValueStyle, labelContainerStyle, labelProps, _placeholder],
-  );
-
-  /**
-   * Set ref.
-   */
-  const setBadgeFlatListRef = useCallback(ref => {
-    badgeFlatListRef.current = ref;
-  }, []);
-
-  /**
-   * The extendable badge container style.
-   * @returns {object}
-   */
-  const extendableBadgeContainerStyle = useMemo(
-    () => [RTL_DIRECTION(rtl, THEME.extendableBadgeContainer)],
-    [rtl, THEME.extendableBadgeContainer],
-  );
-
-  /**
-   * The extendable badge item container style.
-   * @returns {object}
-   */
-  const extendableBadgeItemContainerStyle = useMemo(
-    () => [
-      THEME.extendableBadgeItemContainer,
-      rtl && {
-        marginEnd: 0,
-        marginStart: THEME.extendableBadgeItemContainer.marginEnd,
-      },
-    ],
-    [rtl, THEME.extendableBadgeItemContainer],
-  );
-
-  /**
-   * Extendable badge container.
-   * @returns {JSX.Element}
-   */
-  const ExtendableBadgeContainer = useCallback(
-    ({ selectedItems }) => {
-      if (selectedItems.length > 0) {
-        return (
-          <View style={extendableBadgeContainerStyle}>
-            {selectedItems.map((item, index) => (
-              <View key={index} style={extendableBadgeItemContainerStyle}>
-                <__renderBadge item={item} />
-              </View>
-            ))}
-          </View>
-        );
-      }
-
-      return <BadgeListEmptyComponent />;
-    },
-    [extendableBadgeContainerStyle, extendableBadgeItemContainerStyle],
-  );
-
-  /**
-   * The badge body component.
-   * @returns {JSX.Element}
-   */
-  const BadgeBodyComponent = useMemo(() => {
-    if (extendableBadgeContainer) {
-      return <ExtendableBadgeContainer selectedItems={selectedItems} />;
-    }
-
-    return (
-      <FlatList
-        ref={setBadgeFlatListRef}
-        data={selectedItems}
-        renderItem={__renderBadge}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={keyExtractor}
-        ItemSeparatorComponent={BadgeSeparatorComponent}
-        ListEmptyComponent={BadgeListEmptyComponent}
-        style={THEME.listBody}
-        contentContainerStyle={THEME.listBodyContainer}
-        inverted={rtl}
-      />
-    );
-  }, [
-    rtl,
-    extendableBadgeContainer,
-    selectedItems,
-    __renderBadge,
-    keyExtractor,
-    BadgeSeparatorComponent,
-    BadgeListEmptyComponent,
-    setBadgeFlatListRef,
-    THEME.listBody,
-  ]);
   const LoadingBodyComponent = (
     <View style={{ flexDirection: 'row' }}>
       <View
@@ -1268,14 +972,8 @@ function Picker({
     if (loading) {
       return LoadingBodyComponent;
     }
-    switch (_mode) {
-      case MODE.SIMPLE:
-        return SimpleBodyComponent;
-      case MODE.BADGE:
-        return multiple ? BadgeBodyComponent : SimpleBodyComponent;
-      default: //
-    }
-  }, [_mode, SimpleBodyComponent, BadgeBodyComponent, multiple]);
+    return SimpleBodyComponent;
+  }, [SimpleBodyComponent]);
 
   /**
    * The list item container style.
@@ -1526,8 +1224,8 @@ function Picker({
    * @returns {object}
    */
   const _disabledItemContainerStyle = useMemo(
-    () => [THEME.disabledItemContainer, disabledItemContainerStyle],
-    [disabledItemContainerStyle, THEME.disabledItemContainer],
+    () => disabledItemContainerStyle,
+    [disabledItemContainerStyle],
   );
 
   /**
@@ -1535,8 +1233,8 @@ function Picker({
    * @returns {object}
    */
   const _disabledItemLabelStyle = useMemo(
-    () => [THEME.disabledItemContainer, disabledItemLabelStyle],
-    [disabledItemLabelStyle, THEME.disabledItemContainer],
+    () => disabledItemLabelStyle,
+    [disabledItemLabelStyle],
   );
 
   /**
@@ -1606,7 +1304,6 @@ function Picker({
           categorySelectable={categorySelectable}
           onPress={onPressItem}
           setPosition={setItemPosition}
-          theme={theme}
           THEME={THEME}
         />
       );
@@ -1624,7 +1321,6 @@ function Picker({
       multiple,
       onPressItem,
       rtl,
-      theme,
       THEME,
       _disabledItemContainerStyle,
       _disabledItemLabelStyle,
@@ -1660,11 +1356,10 @@ function Picker({
    * The search placeholder.
    * @returns {string}
    */
-  const _searchPlaceholder = useMemo(() => {
-    if (searchPlaceholder !== null) return searchPlaceholder;
-
-    return _('SEARCH_PLACEHOLDER');
-  }, [searchPlaceholder, _]);
+  const _searchPlaceholder = useMemo(
+    () => searchPlaceholder ?? 'Type something...',
+    [searchPlaceholder],
+  );
 
   /**
    * onChangeSearchText.
@@ -1823,7 +1518,7 @@ function Picker({
    */
   const _ListEmptyComponent = useCallback(() => {
     let Component;
-    const message = _('NOTHING_TO_SHOW');
+    const message = "There's nothing to show!";
 
     if (ListEmptyComponent !== null) Component = ListEmptyComponent;
     else Component = ListEmpty;
@@ -1838,7 +1533,7 @@ function Picker({
         allowFontScaling={allowFontScaling}
       />
     );
-  }, [_, ListEmptyComponent, loading]);
+  }, [ListEmptyComponent, loading]);
 
   /**
    * onRequestCloseModal.
