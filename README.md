@@ -1,103 +1,77 @@
-# React Native Dropdown Picker
+# react-native-dropdown-picker-plus
 
-[![GitHub repo](https://img.shields.io/badge/GitHub_repo-grey?logo=github)](https://github.com/hossein-zare/react-native-dropdown-picker)
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fhossein-zare%2Freact-native-dropdown-picker%2Fbadge%3Fref%3Ddev-5.x&style=flat)](https://actions-badge.atrox.dev/hossein-zare/react-native-dropdown-picker/goto?ref=dev-5.x)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com/hossein-zare/react-native-dropdown-picker/blob/dev-5.x/CONTRIBUTING.md)
-[![react-native-dropdown-picker is released under the MIT license.](https://img.shields.io/github/license/hossein-zare/react-native-dropdown-picker)](https://github.com/hossein-zare/react-native-dropdown-picker/blob/dev-5.x/LICENSE)
-[![Current npm package version.](https://img.shields.io/npm/v/react-native-dropdown-picker?color=brightgreen&label=npm%20package)](https://www.npmjs.org/package/react-native-dropdown-picker)
-[![Weekly npm downloads](https://img.shields.io/npm/dw/react-native-dropdown-picker)](https://www.npmjs.org/package/react-native-dropdown-picker)
-[![Documentation](https://img.shields.io/badge/Documentation-grey)](https://hossein-zare.github.io/react-native-dropdown-picker-website/docs)
+> **Archived.** This repo holds a v6.0.0 TypeScript rewrite of a dropdown picker
+> originally derived from the now-stale `react-native-dropdown-picker` ecosystem.
+> No longer published, maintained, or accepting contributions.
 
----
+## What it is
 
-## 📱 Screenshots
+A single/multi-select dropdown for React Native:
 
-[![Screenshot showing basic dropdown](.github/assets/images/screenshots/basic.png)](https://raw.githubusercontent.com/hossein-zare/react-native-dropdown-picker/dev-5.x/.github/assets/images/screenshots/basic_full.png)
-[![Screenshot showing badges](.github/assets/images/screenshots/badges.png)](https://raw.githubusercontent.com/hossein-zare/react-native-dropdown-picker/dev-5.x/.github/assets/images/screenshots/badges_full.png)
-[![Screenshot showing dark theme and parent items](.github/assets/images/screenshots/dark_theme_parent_items.png)](https://raw.githubusercontent.com/hossein-zare/react-native-dropdown-picker/dev-5.x/.github/assets/images/screenshots/dark_theme_parent_items_full.png)
+- TypeScript-first, strict mode, no escape hatches
+- Generic over `T extends ValueType` with a discriminated-union prop type
+  for single vs multi-select
+- List modes: FlatList (default), ScrollView, Modal
+- Optional search with normalized matching (handles regional accents)
+  and `addCustomItem` via `fastest-levenshtein` distance sort
+- Optional category/parent items, sticky headers, item separators
+- RTL aware
+- Consumer-controlled placeholders/copy (no built-in i18n layer)
 
-The above screenshots were taken
-from [this example](https://snack.expo.dev/8mHmLfcZf).
+## Usage
 
-## 👋 Usage
+```tsx
+import { useState } from 'react';
+import { View, Text } from 'react-native';
+import DropDownPicker, { ItemType } from 'react-native-dropdown-picker-plus';
 
-### Basic usage
-
-The following code shows basic usage of this library:
-
-```javascript
-import React, {useState} from 'react';
-import {View, Text} from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker-plus';
+const ITEMS: Array<ItemType<string>> = [
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { label: 'Pear', value: 'pear' },
+];
 
 export default function App() {
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        {label: 'Apple', value: 'apple'},
-        {label: 'Banana', value: 'banana'},
-        {label: 'Pear', value: 'pear'},
-    ]);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState<string | null>(null);
 
-    return (
-        <View style={{flex: 1}}>
-            <View
-                style={{
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingHorizontal: 15,
-                }}>
-                <DropDownPicker
-                    open={open}
-                    value={value}
-                    items={items}
-                    setOpen={setOpen}
-                    setValue={setValue}
-                    setItems={setItems}
-                    placeholder={'Choose a fruit.'}
-                />
-            </View>
-
-            <View style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}>
-                <Text>Chosen fruit: {value === null ? 'none' : value}</Text>
-            </View>
-        </View>
-    );
+  return (
+    <View style={{ flex: 1 }}>
+      <DropDownPicker
+        open={open}
+        value={value}
+        items={ITEMS}
+        setOpen={setOpen}
+        setValue={setValue}
+        placeholder="Choose a fruit"
+      />
+      <Text>Chosen fruit: {value ?? 'none'}</Text>
+    </View>
+  );
 }
 ```
 
-### Further information on usage
+`<DropDownPicker>` re-exports its prop types — see `index.ts` for the full surface.
 
-You can find more examples in the `examples` subdirectory. This subdirectory is
-a working [Expo](https://github.com/expo/expo) project demonstrating this
-library. It shows how to use this library with class components as well as with
-function components, and in TypeScript as well as in JavaScript. Navigate into
-the `examples` subdirectory, run `npm install`, and then run `npx expo start` to
-see the examples working.
+## What v6 changed from v5
 
-For further information on how to use this library,
-read [the usage documentation](https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage).
+This is a hard fork. Breaking on purpose:
 
-## 📄 Further documentation
+- **Removed**: `mode='BADGE'` + the entire badge renderer
+- **Removed**: `theme` prop + `DARK` theme + `setTheme` / `addTheme` /
+  `Picker.THEMES` (use your own theming layer)
+- **Removed**: `language` / `translation` props + `Picker.LANGUAGE` /
+  `setLanguage` / `addTranslation` / `modifyTranslation` (pass `placeholder`,
+  `searchPlaceholder`, `multipleText` directly)
+- **Removed**: `MODE` constant + `setMode` (was a one-value enum after BADGE went)
+- **Removed**: `SCHEMA` static and the hand-written `index.d.ts` (types now flow
+  from source)
+- **Converted**: every source file from JavaScript to TypeScript under full
+  strict mode (`strict`, `noUncheckedIndexedAccess`,
+  `noPropertyAccessFromIndexSignature`, `noUnusedLocals`, `noImplicitReturns`)
+- **Replaced**: hand-rolled arrow icon memo with a typed `<PickerArrow />`
+  component
 
-The docs can be read
-at: [https://hossein-zare.github.io/react-native-dropdown-picker-website](https://hossein-zare.github.io/react-native-dropdown-picker-website)
+## License
 
-The docs can be edited
-at: [https://github.com/hossein-zare/react-native-dropdown-picker-website](https://github.com/hossein-zare/react-native-dropdown-picker-website)
-
-## 😕 Support and issues
-
-If you have questions or need help, you
-can [ask a question on Stack Overflow](https://stackoverflow.com/questions/tagged/react-native-dropdown-picker)
-or [make a GitHub issue](https://github.com/hossein-zare/react-native-dropdown-picker/issues/new/choose).
-You can also make a GitHub issue to report a bug or make a feature request.
-
-## 🚀️ Contributing
-
-See [CONTRIBUTING.md](https://github.com/hossein-zare/react-native-dropdown-picker/blob/dev-5.x/CONTRIBUTING.md).
+MIT. See [LICENSE](./LICENSE).
