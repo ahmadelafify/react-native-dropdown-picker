@@ -1,4 +1,4 @@
-# react-native-dropdown-picker-plus
+# react-native-dropdown-picker
 
 > **Archived.** This repo holds a v6.0.0 TypeScript rewrite of a dropdown picker
 > originally derived from the now-stale `react-native-dropdown-picker` ecosystem.
