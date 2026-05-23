@@ -1,4 +1,4 @@
-export default {
+const Colors = {
   WHITE: '#fff',
   BLACK: '#000',
   ALTO: '#dfdfdf',
@@ -8,4 +8,6 @@ export default {
   LYNCH: '#697098',
   SHARK: '#242526',
   SHUTTLE_GREY: '#565E67',
-};
+} as const;
+
+export default Colors;

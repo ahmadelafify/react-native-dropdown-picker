@@ -1,38 +1,26 @@
-import { ScaledSheet, moderateScale, verticalScale, scale } from 'react-native-size-matters';
+import { ImageSourcePropType } from 'react-native';
+import { ScaledSheet, moderateScale, scale } from 'react-native-size-matters';
 import Colors from '../../constants/colors';
 
-export const ICONS = {
+export const ICONS: {
+  ARROW_DOWN: ImageSourcePropType;
+  ARROW_UP: ImageSourcePropType;
+  TICK: ImageSourcePropType;
+  CLOSE: ImageSourcePropType;
+} = {
   ARROW_DOWN: require('./icons/arrow-down.png'),
   ARROW_UP: require('./icons/arrow-up.png'),
   TICK: require('./icons/tick.png'),
   CLOSE: require('./icons/close.png'),
 };
 
-export default ScaledSheet.create({
+const styles = ScaledSheet.create({
   arrowIcon: {
     height: moderateScale(20),
     width: moderateScale(20),
   },
   arrowIconContainer: {
     marginLeft: moderateScale(10),
-  },
-  badgeDotStyle: {
-    backgroundColor: Colors.GREY,
-    borderRadius: moderateScale(5),
-    height: moderateScale(10),
-    marginRight: moderateScale(8),
-    width: moderateScale(10),
-  },
-  badgeSeparator: {
-    width: moderateScale(5),
-  },
-  badgeStyle: {
-    alignItems: 'center',
-    backgroundColor: Colors.ALTO,
-    borderRadius: moderateScale(10),
-    flexDirection: 'row',
-    paddingHorizontal: moderateScale(10),
-    paddingVertical: moderateScale(5),
   },
   closeIcon: {
     height: moderateScale(30),
@@ -57,15 +45,6 @@ export default ScaledSheet.create({
     position: 'absolute',
     width: '100%',
     zIndex: 1000,
-  },
-  extendableBadgeContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    flex: 1,
-  },
-  extendableBadgeItemContainer: {
-    marginEnd: moderateScale(7),
-    marginVertical: moderateScale(3),
   },
   flatListContentContainer: {
     flexGrow: 1,
@@ -169,3 +148,6 @@ export default ScaledSheet.create({
     marginLeft: moderateScale(10),
   },
 });
+
+export type ThemeStyles = typeof styles;
+export default styles;

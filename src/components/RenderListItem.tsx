@@ -1,93 +1,127 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import { JSX, memo, useCallback, useMemo } from 'react';
+import {
+  LayoutChangeEvent,
+  StyleProp,
+  Text,
+  TextProps,
+  TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  ViewStyle,
+} from 'react-native';
+import type { ThemeStyles } from '../themes/light';
 
-import { Text, TouchableOpacity } from 'react-native';
+export type ValueType = string | number | boolean;
 
-function RenderListItem({
-  rtl,
-  item,
-  label,
-  value,
-  parent,
-  selectable,
-  disabled,
-  props,
-  labelProps,
+export interface ItemType<T extends ValueType> {
+  containerStyle?: StyleProp<ViewStyle>;
+  disabled?: boolean;
+  icon?: () => JSX.Element;
+  label?: string;
+  labelStyle?: StyleProp<TextStyle>;
+  parent?: T | null;
+  selectable?: boolean;
+  testID?: string;
+  value?: T;
+  [key: string]: unknown;
+}
+
+interface RenderListItemProps<T extends ValueType> {
+  allowFontScaling?: boolean;
+  categorySelectable: boolean;
+  containerStyle: StyleProp<ViewStyle>;
+  custom: boolean;
+  customItemContainerStyle: StyleProp<ViewStyle>;
+  customItemLabelStyle: StyleProp<TextStyle>;
+  disabled: boolean;
+  disabledItemContainerStyle: StyleProp<ViewStyle>;
+  disabledItemLabelStyle: StyleProp<TextStyle>;
+  IconComponent: JSX.Element | null;
+  isSelected: boolean;
+  item: ItemType<T>;
+  label: string;
+  labelProps?: TextProps;
+  labelStyle: StyleProp<TextStyle>;
+  listChildContainerStyle: StyleProp<ViewStyle>;
+  listChildLabelStyle: StyleProp<TextStyle>;
+  listItemContainerStyle: StyleProp<ViewStyle>;
+  listItemLabelStyle: StyleProp<TextStyle>;
+  listParentContainerStyle: StyleProp<ViewStyle>;
+  listParentLabelStyle: StyleProp<TextStyle>;
+  onPress: (item: ItemType<T>, custom: boolean) => void;
+  parent: T | null;
+  props?: TouchableOpacityProps;
+  rtl: boolean;
+  selectable: boolean | undefined;
+  selectedItemContainerStyle: StyleProp<ViewStyle>;
+  selectedItemLabelStyle: StyleProp<TextStyle>;
+  setPosition: (value: T, y: number) => void;
+  THEME: ThemeStyles;
+  TickIconComponent: () => JSX.Element;
+  value: T;
+}
+
+function RenderListItem<T extends ValueType>({
+  allowFontScaling = false,
+  categorySelectable,
+  containerStyle,
   custom,
-  isSelected,
-  IconComponent,
-  TickIconComponent,
-  listItemContainerStyle,
-  listItemLabelStyle,
-  listChildContainerStyle,
-  listParentContainerStyle,
-  listChildLabelStyle,
-  listParentLabelStyle,
   customItemContainerStyle,
   customItemLabelStyle,
-  selectedItemContainerStyle,
-  selectedItemLabelStyle,
+  disabled,
   disabledItemContainerStyle,
   disabledItemLabelStyle,
-  containerStyle,
+  IconComponent,
+  isSelected,
+  item,
+  label,
+  labelProps,
   labelStyle,
-  categorySelectable,
+  listChildContainerStyle,
+  listChildLabelStyle,
+  listItemContainerStyle,
+  listItemLabelStyle,
+  listParentContainerStyle,
+  listParentLabelStyle,
   onPress,
+  parent,
+  props,
+  selectable,
+  selectedItemContainerStyle,
+  selectedItemLabelStyle,
   setPosition,
   THEME,
-  allowFontScaling = false,
-}) {
-  /**
-   * The tick icon component.
-   * @returns {JSX|null}
-   */
+  TickIconComponent,
+  value,
+}: RenderListItemProps<T>): JSX.Element {
   const _TickIconComponent = useMemo(
-    () => isSelected && <TickIconComponent />,
+    () => (isSelected ? <TickIconComponent /> : null),
     [isSelected, TickIconComponent],
   );
 
-  /**
-   * The list category container style.
-   * @returns {object}
-   */
   const _listParentChildContainerStyle = useMemo(
     () =>
       parent !== null
         ? [THEME.listChildContainer, ...[listChildContainerStyle].flat()]
         : [THEME.listParentContainer, ...[listParentContainerStyle].flat()],
-    [THEME, rtl, listChildContainerStyle, listParentContainerStyle, parent],
+    [THEME, listChildContainerStyle, listParentContainerStyle, parent],
   );
 
-  /**
-   * The selected item container style.
-   * @returns {object}
-   */
   const _selectedItemContainerStyle = useMemo(
-    () => isSelected && selectedItemContainerStyle,
+    () => (isSelected ? selectedItemContainerStyle : undefined),
     [isSelected, selectedItemContainerStyle],
   );
 
-  /**
-   * The disabled item container style.
-   * @returns {object}
-   */
   const _disabledItemContainerStyle = useMemo(
-    () => disabled && disabledItemContainerStyle,
+    () => (disabled ? disabledItemContainerStyle : undefined),
     [disabled, disabledItemContainerStyle],
   );
 
-  /**
-   * The custom container item style.
-   * @returns {JSX}
-   */
   const _customItemContainerStyle = useMemo(
-    () => custom && [THEME.customItemContainer, ...[customItemContainerStyle].flat()],
+    () => (custom ? [THEME.customItemContainer, ...[customItemContainerStyle].flat()] : undefined),
     [THEME, custom, customItemContainerStyle],
   );
 
-  /**
-   * The list item container style.
-   * @returns {object}
-   */
   const _listItemContainerStyle = useMemo(
     () => [
       ...[listItemContainerStyle].flat(),
@@ -107,10 +141,6 @@ function RenderListItem({
     ],
   );
 
-  /**
-   * The list category label style.
-   * @returns {object}
-   */
   const _listParentChildLabelStyle = useMemo(
     () =>
       parent !== null
@@ -119,37 +149,21 @@ function RenderListItem({
     [THEME, listChildLabelStyle, listParentLabelStyle, parent],
   );
 
-  /**
-   * The selected item label style.
-   * @returns {object}
-   */
   const _selectedItemLabelStyle = useMemo(
-    () => isSelected && selectedItemLabelStyle,
+    () => (isSelected ? selectedItemLabelStyle : undefined),
     [isSelected, selectedItemLabelStyle],
   );
 
-  /**
-   * The disabled item label style.
-   * @returns {object}
-   */
   const _disabledItemLabelStyle = useMemo(
-    () => disabled && disabledItemLabelStyle,
+    () => (disabled ? disabledItemLabelStyle : undefined),
     [disabled, disabledItemLabelStyle],
   );
 
-  /**
-   * The custom label item style.
-   * @returns {JSX}
-   */
   const _customItemLabelStyle = useMemo(
-    () => custom && [THEME.customItemLabel, ...[customItemLabelStyle].flat()],
+    () => (custom ? [THEME.customItemLabel, ...[customItemLabelStyle].flat()] : undefined),
     [THEME, custom, customItemLabelStyle],
   );
 
-  /**
-   * The list item label style.
-   * @returns {object}
-   */
   const _listItemLabelStyle = useMemo(
     () => [
       ...[listItemLabelStyle].flat(),
@@ -169,29 +183,18 @@ function RenderListItem({
     ],
   );
 
-  /**
-   * onPress.
-   */
   const __onPress = useCallback(() => {
     if (parent === null && !categorySelectable && selectable !== true) {
       return;
     }
-
     onPress(item, custom);
-  }, [onPress, parent, categorySelectable, custom]);
+  }, [onPress, parent, categorySelectable, custom, item, selectable]);
 
-  /**
-   * onLayout.
-   */
   const onLayout = useCallback(
-    ({
-      nativeEvent: {
-        layout: { y },
-      },
-    }) => {
-      setPosition(value, y);
+    (e: LayoutChangeEvent) => {
+      setPosition(value, e.nativeEvent.layout.y);
     },
-    [value],
+    [setPosition, value],
   );
 
   return (
@@ -212,7 +215,10 @@ function RenderListItem({
   );
 }
 
-const areEqual = (nextProps, prevProps) => {
+function areEqual<T extends ValueType>(
+  prevProps: Readonly<RenderListItemProps<T>>,
+  nextProps: Readonly<RenderListItemProps<T>>,
+): boolean {
   if (nextProps.label !== prevProps.label) return false;
   if (nextProps.value !== prevProps.value) return false;
   if (nextProps.parent !== prevProps.parent) return false;
@@ -222,8 +228,7 @@ const areEqual = (nextProps, prevProps) => {
   if (nextProps.isSelected !== prevProps.isSelected) return false;
   if (nextProps.categorySelectable !== prevProps.categorySelectable) return false;
   if (nextProps.rtl !== prevProps.rtl) return false;
-
   return true;
-};
+}
 
-export default memo(RenderListItem, areEqual);
+export default memo(RenderListItem, areEqual) as typeof RenderListItem;
