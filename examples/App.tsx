@@ -51,9 +51,9 @@ export default function App(): JSX.Element {
           label="This Is A Testing Label"
           listMode="MODAL"
           searchable
-          setValue={setExample}
+          setValue={setExample as any}
           value={example as any}
-          items={EXAMPLE_ITEMS}
+          items={EXAMPLE_ITEMS as any}
           open={pickerOpen}
           setOpen={setPickerOpen as any}
           hideListItemsIcons
