@@ -226,7 +226,10 @@ interface DropDownPickerSingleProps<T extends ValueType> {
   onChangeValue?: (value: T | null) => void;
   onSelectItem?: (item: ItemType<T>) => void;
   value: T | null;
-  setValue: Dispatch<SetStateAction<T | null>> | ((cb: (prev: T | null) => T | null) => void);
+  setValue:
+    | Dispatch<SetStateAction<T | null>>
+    | ((cb: (prev: T | null) => T | null) => void)
+    | ((getValue: () => T | null) => void);
 }
 
 interface DropDownPickerMultipleProps<T extends ValueType> {
@@ -236,7 +239,8 @@ interface DropDownPickerMultipleProps<T extends ValueType> {
   value: Array<T> | null;
   setValue:
     | Dispatch<SetStateAction<Array<T> | null>>
-    | ((cb: (prev: Array<T> | null) => Array<T> | null) => void);
+    | ((cb: (prev: Array<T> | null) => Array<T> | null) => void)
+    | ((getValue: () => Array<T> | null) => void);
 }
 
 export type DropDownPickerProps<T extends ValueType> = DropDownPickerBaseProps<T> &
