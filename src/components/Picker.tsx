@@ -1012,33 +1012,6 @@ function Picker<T extends ValueType>(props: DropDownPickerProps<T>): ReactElemen
   );
 
   /**
-   * The arrow component.
-   * @returns {JSX.Element}
-   */
-  const _ArrowComponent = useMemo(() => {
-    if (!showArrowIcon) return null;
-
-    let Component;
-    if (open && ArrowUpIconComponent !== null)
-      Component = <ArrowUpIconComponent style={_arrowIconStyle} />;
-    else if (!open && ArrowDownIconComponent !== null)
-      Component = <ArrowDownIconComponent style={_arrowIconStyle} />;
-    else
-      Component = <Image source={open ? ICON.ARROW_UP : ICON.ARROW_DOWN} style={_arrowIconStyle as StyleProp<ImageStyle>} />;
-
-    return <View style={_arrowIconContainerStyle}>{Component}</View>;
-  }, [
-    showArrowIcon,
-    open,
-    ArrowUpIconComponent,
-    ArrowDownIconComponent,
-    _arrowIconStyle,
-    _arrowIconContainerStyle,
-    ICON.ARROW_UP,
-    ICON.ARROW_DOWN,
-  ]);
-
-  /**
    * The icon container style.
    * @returns {object}
    */

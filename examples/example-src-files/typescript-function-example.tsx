@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { JSX, useState } from 'react';
 import { Button, Text, View } from 'react-native';
-import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
+import DropDownPicker from '../../src/components/Picker';
+import type { ItemType } from '../../src/components/RenderListItem';
 
 /**
  *

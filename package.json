@@ -1,6 +1,6 @@
 {
   "name": "react-native-dropdown-picker-plus",
-  "version": "5.10.23",
+  "version": "6.0.0",
   "description": "A single / multiple, categorizable, customizable, localizable and searchable item picker (drop-down) component for react native which supports both Android & iOS.",
   "keywords": [
     "picker",
@@ -41,8 +41,7 @@
   },
   "license": "MIT",
   "author": "Hossein Zare",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "index.ts",
   "dependencies": {
     "fastest-levenshtein": "^1.0.16",
     "react-native-gesture-handler": "~2.13.1",
