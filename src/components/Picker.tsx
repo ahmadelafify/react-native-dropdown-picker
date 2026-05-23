@@ -876,54 +876,18 @@ function Picker<T extends ValueType>(props: DropDownPickerProps<T>): ReactElemen
     [onLayout],
   );
 
-  /**
-   * Disable borderRadius for the picker.
-   * @returns {object}
-   */
-  const pickerNoBorderRadius = useMemo(() => {
-    if (listMode === LIST_MODE.MODAL) return null;
+  // When disableBorderRadius is on and the dropdown is open, zero the corners that
+  // touch the dropdown — picker zeroes its facing edge, dropdown zeroes the opposite.
+  const [pickerNoBorderRadius, dropDownNoBorderRadius] = useMemo(() => {
+    if (listMode === LIST_MODE.MODAL) return [null, null];
+    if (!(disableBorderRadius && open)) return [{}, {}];
 
-    if (disableBorderRadius && open) {
-      return direction === 'top'
-        ? {
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          }
-        : {
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-          };
-    }
-
-    return {};
+    const top = { borderTopLeftRadius: 0, borderTopRightRadius: 0 };
+    const bottom = { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 };
+    return direction === 'top' ? [bottom, top] : [top, bottom];
   }, [disableBorderRadius, open, direction, listMode]);
 
-  /**
-   * Disable borderRadius for the drop down.
-   * @returns {object}
-   */
-  const dropDownNoBorderRadius = useMemo(() => {
-    if (listMode === LIST_MODE.MODAL) return null;
-
-    if (disableBorderRadius && open) {
-      return direction === 'top'
-        ? {
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-          }
-        : {
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          };
-    }
-    return {};
-  }, [disableBorderRadius, open, direction, listMode]);
-
-  /**
-   * The disabled style.
-   * @returns {object}
-   */
-  const _disabledStyle = useMemo(() => disabled && disabledStyle, [disabled]);
+  const _disabledStyle = disabled ? disabledStyle : undefined;
 
   /**
    * The zIndex.
@@ -1371,14 +1335,7 @@ function Picker<T extends ValueType>(props: DropDownPickerProps<T>): ReactElemen
     return <View style={_tickIconContainerStyle}>{Component}</View>;
   }, [TickIconComponent, _tickIconStyle, _tickIconContainerStyle, showTickIcon, ICON.TICK]);
 
-  /**
-   * The renderItem component.
-   * @returns {JSX.Element}
-   */
-  const RenderItemComponent = useMemo(
-    () => (renderListItem !== null ? renderListItem : RenderListItem),
-    [renderListItem],
-  );
+  const RenderItemComponent = renderListItem ?? RenderListItem;
 
   /**
    * The selected item container style.
@@ -1398,23 +1355,8 @@ function Picker<T extends ValueType>(props: DropDownPickerProps<T>): ReactElemen
     [selectedItemLabelStyle, THEME.selectedItemLabel],
   );
 
-  /**
-   * The disabled item container style.
-   * @returns {object}
-   */
-  const _disabledItemContainerStyle = useMemo(
-    () => disabledItemContainerStyle,
-    [disabledItemContainerStyle],
-  );
-
-  /**
-   * The disabled item label style.
-   * @returns {object}
-   */
-  const _disabledItemLabelStyle = useMemo(
-    () => disabledItemLabelStyle,
-    [disabledItemLabelStyle],
-  );
+  const _disabledItemContainerStyle = disabledItemContainerStyle;
+  const _disabledItemLabelStyle = disabledItemLabelStyle;
 
   /**
    * Set item position.
@@ -1871,11 +1813,7 @@ function Picker<T extends ValueType>(props: DropDownPickerProps<T>): ReactElemen
     pickerRef.current = ref;
   }, []);
 
-  /**
-   * Pointer events.
-   * @returns {string}
-   */
-  const pointerEvents = useMemo(() => (disabled ? 'none' : 'auto'), [disabled]);
+  const pointerEvents = disabled ? 'none' : 'auto';
   const [dimlabel, setDimLabel] = useState(false);
 
   const themeStyleObj = THEME.style as unknown as { backgroundColor?: string } & Record<string, unknown>;
